@@ -9,9 +9,9 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative w-10 h-10">
-              <Image src="/placeholder.svg?height=40&width=40" alt="Logo" width={40} height={40} />
+              <Image src="/tiger.png?height=40&width=40" alt="Logo" width={40} height={40} />
             </div>
-            <span className="font-bold text-xl text-purple-700">AlphaKids</span>
+            <span className="font-bold text-xl text-purple-700">Sigma Kids</span>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8">

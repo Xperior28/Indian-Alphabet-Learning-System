@@ -57,7 +57,7 @@ export default function FeedbackPopup({ onClose, nextUrl }: FeedbackPopupProps) 
                 </Button>
               </Link>
 
-              <Button variant="outline" className="rounded-full px-6 py-2 text-lg" onClick={onClose}>
+              <Button variant="outline" className="rounded-full px-6 py-2 text-lg border border-black" onClick={onClose}>
                 Try Again
               </Button>
             </div>

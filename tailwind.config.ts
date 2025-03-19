@@ -18,6 +18,9 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        delius: ["var(--font-delius)"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

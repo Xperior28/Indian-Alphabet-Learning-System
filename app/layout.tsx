@@ -1,20 +1,25 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import type React from "react"
+import "./globals.css"
+import { Delius_Swash_Caps } from "next/font/google";
 
-export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
-}
+const delius = Delius_Swash_Caps({
+  weight: ["400"], // Delius Swash Caps only has 400 weight
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-delius",
+});
+
+
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className={`${delius.variable}`} suppressHydrationWarning>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   )
 }
+

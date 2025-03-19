@@ -29,18 +29,17 @@ export default function AlphabetList() {
   }, [language, alphabetList.length])
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-yellow-100 to-orange-100">
-      <Navbar />
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-yellow-100 to-orange-100 font-delius">
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <Link href="/select-language" className="inline-block mb-8">
-          <Button variant="outline" className="rounded-full">
+          <Button variant="outline" className="rounded-full border border-black font-bold">
             ← Back to Languages
           </Button>
         </Link>
 
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-orange-600 capitalize">{language} Alphabets</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-orange-600 capitalize underline">{language} Alphabets</h1>
           <p className="text-xl text-gray-700 mb-2">Click on any letter to start learning!</p>
 
           <div className="flex items-center justify-center gap-2 mb-6">
@@ -85,14 +84,12 @@ export default function AlphabetList() {
                     </div>
                   )}
                 </div>
-                <p className="text-center mt-2 font-medium text-gray-700">{alphabet.name}</p>
+                <p className="text-center mt-2 font-bold text-gray-700">{alphabet.name}</p>
               </Link>
             )
           })}
         </div>
       </main>
-
-      <Footer />
     </div>
   )
 }

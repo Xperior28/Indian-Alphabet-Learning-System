@@ -6,7 +6,7 @@ import Footer from "@/components/footer"
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-100 to-purple-100">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-100 to-purple-100 font-delius">
       <Navbar />
 
       <main className="flex-grow">
@@ -37,7 +37,7 @@ export default function LandingPage() {
             {/* Mascot */}
             <div className="relative w-40 h-40 mx-auto mb-8">
               <Image
-                src="/placeholder.svg?height=160&width=160"
+                src="/AA.png?height=160&width=160"
                 alt="Cartoon mascot"
                 width={160}
                 height={160}
@@ -56,7 +56,7 @@ export default function LandingPage() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/select-language">
-                <Button className="text-xl px-8 py-6 rounded-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white font-bold shadow-lg transform transition-transform hover:scale-105">
+                <Button className="text-xl px-8 py-6 rounded-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white font-medium shadow-lg transform transition-transform hover:scale-105">
                   Let's Start Learning!
                 </Button>
               </Link>
@@ -80,8 +80,8 @@ export default function LandingPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               <div className="bg-blue-50 rounded-3xl p-8 shadow-lg border-2 border-blue-200 text-center">
-                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Image src="/placeholder.svg?height=40&width=40" alt="Interactive icon" width={40} height={40} />
+                <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Image src="/pencil.svg?height=40&width=40" alt="Interactive icon" width={80} height={80} />
                 </div>
                 <h3 className="text-2xl font-bold mb-4 text-blue-700">Interactive Learning</h3>
                 <p className="text-gray-700">
@@ -90,16 +90,16 @@ export default function LandingPage() {
               </div>
 
               <div className="bg-pink-50 rounded-3xl p-8 shadow-lg border-2 border-pink-200 text-center">
-                <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Image src="/placeholder.svg?height=40&width=40" alt="Progress icon" width={40} height={40} />
+                <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Image src="/percentage.svg?height=40&width=40" alt="Progress icon" width={80} height={80} />
                 </div>
                 <h3 className="text-2xl font-bold mb-4 text-pink-700">Track Progress</h3>
                 <p className="text-gray-700">See your child's progress with our easy-to-understand tracking system.</p>
               </div>
 
               <div className="bg-green-50 rounded-3xl p-8 shadow-lg border-2 border-green-200 text-center">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Image src="/placeholder.svg?height=40&width=40" alt="Fun icon" width={40} height={40} />
+                <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Image src="/happy.svg?height=40&width=40" alt="Fun icon" width={80} height={80} />
                 </div>
                 <h3 className="text-2xl font-bold mb-4 text-green-700">Fun & Engaging</h3>
                 <p className="text-gray-700">
@@ -118,7 +118,7 @@ export default function LandingPage() {
               Choose from 6 Indian languages and start your learning journey today!
             </p>
             <Link href="/select-language">
-              <Button className="text-xl px-8 py-6 rounded-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white font-bold shadow-lg transform transition-transform hover:scale-105">
+              <Button className="text-xl px-8 py-6 rounded-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white font-medium shadow-lg transform transition-transform hover:scale-105">
                 Get Started Now
               </Button>
             </Link>

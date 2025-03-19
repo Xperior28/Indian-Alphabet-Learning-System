@@ -3,20 +3,20 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 
 const languages = [
-  { id: "hindi", name: "Hindi", image: "/placeholder.svg?height=120&width=120" },
-  { id: "tamil", name: "Tamil", image: "/placeholder.svg?height=120&width=120" },
-  { id: "bengali", name: "Bengali", image: "/placeholder.svg?height=120&width=120" },
-  { id: "telugu", name: "Telugu", image: "/placeholder.svg?height=120&width=120" },
-  { id: "kannada", name: "Kannada", image: "/placeholder.svg?height=120&width=120" },
-  { id: "malayalam", name: "Malayalam", image: "/placeholder.svg?height=120&width=120" },
+  { id: "hindi", name: "Hindi", image: "/hindi.png?height=120&width=120" },
+  { id: "tamil", name: "Tamil", image: "/tamil.png?height=120&width=120" },
+  { id: "bengali", name: "Bengali", image: "/bengali.png?height=120&width=120" },
+  { id: "telugu", name: "Telugu", image: "/telegu.png?height=120&width=120" },
+  { id: "kannada", name: "Kannada", image: "/kanada.png?height=120&width=120" },
+  { id: "malayalam", name: "Malayalam", image: "/malayalam.png?height=120&width=120" },
 ]
 
 export default function SelectLanguage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-100 to-blue-100">
+    <div className="min-h-screen bg-gradient-to-b from-green-100 to-blue-100 font-delius">
       <div className="container mx-auto px-4 py-16">
         <Link href="/" className="inline-block mb-8">
-          <Button variant="outline" className="rounded-full">
+          <Button variant="outline" className="rounded-full border border-black font-bold">
             ← Back to Home
           </Button>
         </Link>
@@ -34,8 +34,8 @@ export default function SelectLanguage() {
               className="transform transition-transform hover:scale-105"
             >
               <div className="bg-white rounded-2xl p-6 shadow-lg border-4 border-yellow-300 flex flex-col items-center">
-                <div className="mb-4 relative">
-                  <div className="absolute inset-0 bg-blue-200 rounded-full transform -rotate-6"></div>
+                <div className="mb-4 relative w-[120px] h-[120px] flex items-center">
+                  
                   <Image
                     src={language.image || "/placeholder.svg"}
                     alt={language.name}
