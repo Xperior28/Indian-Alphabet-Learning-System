@@ -9,9 +9,9 @@ export default function Footer() {
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center space-x-2 mb-4">
               <div className="relative w-10 h-10">
-                <Image src="/placeholder.svg?height=40&width=40" alt="Logo" width={40} height={40} />
+                <Image src="/tiger.png?height=40&width=40" alt="Logo" width={40} height={40} />
               </div>
-              <span className="font-bold text-xl text-purple-700">AlphaKids</span>
+              <span className="font-bold text-xl text-purple-700">Sigma Kids</span>
             </Link>
             <p className="text-gray-600 mb-4">Making learning Indian languages fun and interactive for children.</p>
             <div className="flex space-x-4">

@@ -35,6 +35,21 @@ export default function LearnPage() {
   }
 
   const handleSubmit = () => {
+
+    if (canvasRef.current) {
+      const imageDataURL = canvasRef.current.getDataURL();
+      console.log("Canvas Image Data URL:", imageDataURL);
+
+      if(imageDataURL) {
+        const link = document.createElement("a");
+        link.href = imageDataURL;
+        link.download = `${currentAlphabet.character}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+
     // In a real app, this would validate the drawing
     setShowFeedback(true)
 

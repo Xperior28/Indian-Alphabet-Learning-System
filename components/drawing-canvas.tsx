@@ -9,25 +9,35 @@ interface DrawingCanvasProps {
   character?: string;
 }
 
-const DrawingCanvas = forwardRef<{ clear: () => void }, DrawingCanvasProps>(
+const DrawingCanvas = forwardRef<{ clear: () => void; getDataURL: () => string }, DrawingCanvasProps>(
   ({ width = 300, height = 300, character = "" }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const traceCanvasRef = useRef<HTMLCanvasElement>(null);
     const contextRef = useRef<CanvasRenderingContext2D | null>(null);
+    const traceContextRef = useRef<CanvasRenderingContext2D | null>(null);
     const isDrawing = useRef(false);
 
     useImperativeHandle(ref, () => ({
       clear: () => {
         const canvas = canvasRef.current;
-        const context = contextRef.current;
-        if (canvas && context) {
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          // Redraw the translucent character guide
-          drawCharacterGuide();
+        const traceCanvas = traceCanvasRef.current;
+        if (canvas && traceCanvas) {
+          const ctx = canvas.getContext("2d");
+          const traceCtx = traceCanvas.getContext("2d");
+          if (ctx && traceCtx) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            traceCtx.clearRect(0, 0, traceCanvas.width, traceCanvas.height);
+            drawCharacterGuide();
+          }
         }
+      },
+      getDataURL: () => {
+        const traceCanvas = traceCanvasRef.current;
+        if (!traceCanvas) return "";
+        return traceCanvas.toDataURL("image/png");
       },
     }));
 
-    // Function to draw the translucent character guide
     const drawCharacterGuide = () => {
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -35,93 +45,87 @@ const DrawingCanvas = forwardRef<{ clear: () => void }, DrawingCanvasProps>(
       if (!ctx || !character) return;
 
       ctx.save();
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear before drawing
-
-      // Set translucent style for the guide
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.globalAlpha = 0.2;
-      ctx.fillStyle = "#6d28d9"; // Purple color
+      ctx.fillStyle = "#6d28d9";
       ctx.font = "150px Arial";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-
-      // Draw the character in the center
       ctx.fillText(character, canvas.width / 2, canvas.height / 2);
-
       ctx.restore();
     };
 
     useEffect(() => {
       const canvas = canvasRef.current;
-      if (!canvas) return;
+      const traceCanvas = traceCanvasRef.current;
+      if (!canvas || !traceCanvas) return;
 
-      // Set canvas dimensions
       canvas.width = width;
       canvas.height = height;
+      traceCanvas.width = width;
+      traceCanvas.height = height;
 
       const context = canvas.getContext("2d");
-      if (!context) return;
+      const traceContext = traceCanvas.getContext("2d");
+      if (!context || !traceContext) return;
 
       contextRef.current = context;
-      context.lineWidth = 5;
-      context.lineCap = "round";
-      context.strokeStyle = "#6d28d9"; // Purple color
+      traceContextRef.current = traceContext;
+      traceContext.lineWidth = 5;
+      traceContext.lineCap = "round";
+      traceContext.strokeStyle = "#6d28d9";
 
-      // Draw the translucent character guide
       drawCharacterGuide();
     }, [width, height, character]);
 
     const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
       isDrawing.current = true;
-      const canvas = canvasRef.current;
-      if (!canvas) return;
+      const traceCanvas = traceCanvasRef.current;
+      if (!traceCanvas) return;
+      
+      const traceContext = traceCanvas.getContext("2d");
+      if (!traceContext) return;
+      traceContextRef.current = traceContext;
 
-      const context = canvas.getContext("2d");
-      if (!context) return;
-
-      contextRef.current = context;
-
-      // Get coordinates
       let x, y;
       if ("touches" in e) {
-        const rect = canvas.getBoundingClientRect();
+        const rect = traceCanvas.getBoundingClientRect();
         x = e.touches[0].clientX - rect.left;
         y = e.touches[0].clientY - rect.top;
       } else {
         x = e.nativeEvent.offsetX;
         y = e.nativeEvent.offsetY;
       }
-
-      contextRef.current.beginPath();
-      contextRef.current.moveTo(x, y);
+      traceContextRef.current.beginPath();
+      traceContextRef.current.moveTo(x, y);
     };
 
     const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-      if (!isDrawing.current || !contextRef.current || !canvasRef.current) return;
+      if (!isDrawing.current || !traceContextRef.current || !traceCanvasRef.current) return;
 
-      // Get coordinates
       let x, y;
       if ("touches" in e) {
-        const rect = canvasRef.current.getBoundingClientRect();
+        const rect = traceCanvasRef.current.getBoundingClientRect();
         x = e.touches[0].clientX - rect.left;
         y = e.touches[0].clientY - rect.top;
       } else {
         x = e.nativeEvent.offsetX;
         y = e.nativeEvent.offsetY;
       }
-
-      contextRef.current.lineTo(x, y);
-      contextRef.current.stroke();
+      traceContextRef.current.lineTo(x, y);
+      traceContextRef.current.stroke();
     };
 
     const stopDrawing = () => {
       isDrawing.current = false;
-      if (contextRef.current) {
-        contextRef.current.closePath();
+      if (traceContextRef.current) {
+        traceContextRef.current.closePath();
       }
     };
 
     return (
-      <div className="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 relative">
+      <div className="relative border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+        <canvas ref={traceCanvasRef} className="absolute top-0 left-0 z-0" width={width} height={height} />
         <canvas
           ref={canvasRef}
           width={width}
@@ -133,7 +137,7 @@ const DrawingCanvas = forwardRef<{ clear: () => void }, DrawingCanvasProps>(
           onTouchStart={startDrawing}
           onTouchMove={draw}
           onTouchEnd={stopDrawing}
-          className="touch-none"
+          className="relative touch-none z-10"
         />
       </div>
     );
