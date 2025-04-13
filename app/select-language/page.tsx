@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -30,12 +32,11 @@ export default function SelectLanguage() {
           {languages.map((language) => (
             <Link
               key={language.id}
-              href={`/alphabets/${language.id}`}
+              href={`/select-game?language=${language.id}`}
               className="transform transition-transform hover:scale-105"
             >
               <div className="bg-white rounded-2xl p-6 shadow-lg border-4 border-yellow-300 flex flex-col items-center">
                 <div className="mb-4 relative w-[120px] h-[120px] flex items-center">
-                  
                   <Image
                     src={language.image || "/placeholder.svg"}
                     alt={language.name}
