@@ -10,6 +10,7 @@ import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { useParams } from "next/navigation"
 import { updateStats, GameStats, GameType } from "@/lib/game-stats"
+import { createWorker, PSM } from 'tesseract.js';
 
 export default function LearnPage() {
   const params = useParams<{ language: string; id: string }>()
@@ -46,14 +47,75 @@ export default function LearnPage() {
       const imageDataURL = canvasRef.current.getDataURL();
       console.log("Canvas Image Data URL:", imageDataURL);
 
-      if(imageDataURL) {
-        const link = document.createElement("a");
-        link.href = imageDataURL;
-        link.download = `${currentAlphabet.character}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
+      // Create a temporary canvas for color inversion
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      
+      // Create an image from the original data URL
+      const img = new Image();
+      img.src = imageDataURL;
+      
+      img.onload = async () => {
+        if (tempCtx) {
+          // Set canvas dimensions to match the image
+          tempCanvas.width = img.width;
+          tempCanvas.height = img.height;
+
+          console.log("tempCanvas.width:", tempCanvas.width);
+          console.log("tempCanvas.height:", tempCanvas.height);
+          
+          // Fill with white background
+          tempCtx.fillStyle = 'white';
+          tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+          
+          // Draw the original image
+          tempCtx.drawImage(img, 0, 0);
+          
+          // Get image data for color inversion
+          const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+          const data = imageData.data;
+          
+          // Invert colors (make purple strokes black)
+          for (let i = 0; i < data.length; i += 4) {
+            // If pixel is not white (has some color)
+            if (data[i] < 255 || data[i + 1] < 255 || data[i + 2] < 255) {
+              // Set to black
+              data[i] = 0;     // R
+              data[i + 1] = 0; // G
+              data[i + 2] = 0; // B
+            }
+          }
+          
+          tempCtx.putImageData(imageData, 0, 0);
+          
+          // Get the inverted image data URL
+          const invertedImageDataURL = tempCanvas.toDataURL();
+          console.log("Inverted Image Data URL:", invertedImageDataURL);
+
+          let lang = 'eng';
+          switch (language) {
+            case 'hindi': lang = 'hin'; break;
+            case 'tamil': lang = 'tam'; break;
+            case 'bengali': lang = 'ben'; break;
+            case 'telugu': lang = 'tel'; break;
+            case 'kannada': lang = 'kan'; break;
+            case 'malayalam': lang = 'mal'; break;
+          }
+          
+          (async () => {
+            const worker = await createWorker(lang, 1, {
+              langPath: '/tessdata',
+              logger: m => console.log(m),
+            });
+            await worker.setParameters({
+              tessedit_pageseg_mode: PSM.SINGLE_CHAR,
+            });
+            const ret = await worker.recognize(invertedImageDataURL);
+            console.log(ret.data.text);
+            await worker.terminate();
+          })();
+        }
+      };
     }
 
     // In a real app, this would validate the drawing
