@@ -6,6 +6,8 @@ import { alphabets } from "@/lib/alphabet-data"
 import { motion, AnimatePresence } from "framer-motion"
 import Confetti from "@/components/confetti"
 import Balloons from "@/components/balloons"
+import { GameStats, DashboardStats, updateStats } from "@/lib/game-stats"
+import Link from "next/link"
 
 type Card = {
   id: string
@@ -29,6 +31,8 @@ export default function MemoryGame({ language }: { language: string }) {
   const [showConfetti, setShowConfetti] = useState(false)
   const [showBalloons, setShowBalloons] = useState(false)
   const [key, setKey] = useState(0)
+  const [startTime, setStartTime] = useState<number | null>(null)
+  const [gameCompleted, setGameCompleted] = useState(false)
 
   useEffect(() => {
     initializeGame()
@@ -63,7 +67,35 @@ export default function MemoryGame({ language }: { language: string }) {
     setMoves(0)
     setShowConfetti(false)
     setShowBalloons(false)
+    setStartTime(Date.now())
+    setGameCompleted(false)
     setKey(prev => prev + 1)
+  }
+
+  const saveGameStats = () => {
+    if (!startTime) return
+
+    const gameStats: GameStats = {
+      language,
+      gameType: 'memory',
+      moves,
+      time: Math.floor((Date.now() - startTime) / 1000),
+      date: new Date().toISOString()
+    }
+
+    // Get existing stats from localStorage
+    const existingStats = localStorage.getItem('gameStats')
+    const stats: DashboardStats = existingStats ? JSON.parse(existingStats) : {
+      totalGames: 0,
+      languages: {},
+      recentGames: []
+    }
+
+    // Update stats
+    const updatedStats = updateStats(stats, gameStats)
+
+    // Save back to localStorage
+    localStorage.setItem('gameStats', JSON.stringify(updatedStats))
   }
 
   const handleCardClick = (index: number) => {
@@ -99,6 +131,8 @@ export default function MemoryGame({ language }: { language: string }) {
           if (matchedCards.every((card) => card.isMatched)) {
             setShowConfetti(true)
             setShowBalloons(true)
+            setGameCompleted(true)
+            saveGameStats()
           }
         }, 500)
       } else {
@@ -116,6 +150,16 @@ export default function MemoryGame({ language }: { language: string }) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-yellow-100 to-orange-100 p-4 font-delius">
+      <div className="absolute top-12 left-10">
+        <Link href={`/select-game?language=${language}`}>
+          <Button 
+            variant="outline" 
+            className="rounded-full border-2 border-green-500 hover:bg-green-500 hover:text-white transition-colors font-delius"
+          >
+            Back to Games
+          </Button>
+        </Link>
+      </div>
       {showConfetti && <Confetti />}
       {showBalloons && <Balloons />}
       

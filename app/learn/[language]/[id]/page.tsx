@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { alphabets } from "@/lib/alphabet-data"
@@ -9,6 +9,7 @@ import FeedbackPopup from "@/components/feedback-popup"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { useParams } from "next/navigation"
+import { updateStats, GameStats, GameType } from "@/lib/game-stats"
 
 export default function LearnPage() {
   const params = useParams<{ language: string; id: string }>()
@@ -26,8 +27,14 @@ export default function LearnPage() {
     }
     return []
   })
+  const [startTime, setStartTime] = useState<number | null>(null)
 
   const canvasRef = useRef<any>(null)
+
+  useEffect(() => {
+    // Start timer when component mounts
+    setStartTime(Date.now())
+  }, [id])
 
   const handlePlaySound = () => {
     // In a real app, this would play the actual pronunciation
@@ -35,7 +42,6 @@ export default function LearnPage() {
   }
 
   const handleSubmit = () => {
-
     if (canvasRef.current) {
       const imageDataURL = canvasRef.current.getDataURL();
       console.log("Canvas Image Data URL:", imageDataURL);
@@ -58,6 +64,32 @@ export default function LearnPage() {
       const newProgress = [...progress, id]
       setProgress(newProgress)
       localStorage.setItem(`${language}-progress`, JSON.stringify(newProgress))
+
+      // Calculate time taken for this letter
+      const timeTaken = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0
+
+      // Save game stats
+      const gameStats: GameStats = {
+        language,
+        gameType: 'drawing' as GameType,
+        moves: Math.round((newProgress.length / alphabetList.length) * 100), // Progress percentage
+        time: timeTaken, // Time taken for this letter
+        date: new Date().toISOString()
+      }
+
+      // Get existing stats from localStorage
+      const existingStats = localStorage.getItem('gameStats')
+      const stats = existingStats ? JSON.parse(existingStats) : {
+        totalGames: 0,
+        languages: {},
+        recentGames: []
+      }
+
+      // Update stats
+      const updatedStats = updateStats(stats, gameStats)
+
+      // Save back to localStorage
+      localStorage.setItem('gameStats', JSON.stringify(updatedStats))
     }
   }
 

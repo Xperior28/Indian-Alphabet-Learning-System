@@ -32,13 +32,7 @@ export default function GamePage() {
 
   return (
     <div className="min-h-screen">
-      <div className="absolute top-4 left-4">
-        <Link href={`/select-game?language=${language}`}>
-          <Button variant="outline" className="rounded-full border border-black font-bold">
-            ← Back to Games
-          </Button>
-        </Link>
-      </div>
+      
       {renderGame()}
     </div>
   )

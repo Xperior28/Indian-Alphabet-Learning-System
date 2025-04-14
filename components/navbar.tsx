@@ -27,6 +27,9 @@ export default function Navbar() {
             <Link href="#" className="text-gray-700 hover:text-purple-600 font-medium">
               About
             </Link>
+            <Link href="/dashboard" className="text-gray-700 hover:text-purple-600 font-medium">
+              Dashboard
+            </Link>
           </nav>
 
           <div className="flex items-center space-x-4">
