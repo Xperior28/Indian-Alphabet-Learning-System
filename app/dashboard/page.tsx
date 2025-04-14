@@ -14,12 +14,24 @@ export default function Dashboard() {
     recentGames: []
   })
 
+  const [progress, setProgress] = useState<Record<string, string[]>>({})
+
   useEffect(() => {
     // Load stats from localStorage
     const savedStats = localStorage.getItem('gameStats')
     if (savedStats) {
       setStats(JSON.parse(savedStats))
     }
+
+    // Load progress for all languages
+    const newProgress: Record<string, string[]> = {}
+    Object.keys(alphabets).forEach(language => {
+      const savedProgress = localStorage.getItem(`${language}-progress`)
+      if (savedProgress) {
+        newProgress[language] = JSON.parse(savedProgress)
+      }
+    })
+    setProgress(newProgress)
   }, [])
 
   const formatTime = (seconds: number) => {
@@ -67,10 +79,8 @@ export default function Dashboard() {
       // For Drawing Game, we want to show progress and total time
       const totalTime = games.reduce((sum, game) => sum + game.time, 0)
       
-      // Get progress from localStorage
-      const progressKey = `${language}-progress`
-      const progress = localStorage.getItem(progressKey)
-      const progressArray = progress ? JSON.parse(progress) : []
+      // Get progress from state instead of localStorage
+      const progressArray = progress[language] || []
       const alphabetList = alphabets[language] || []
       const progressValue = Math.round((progressArray.length / alphabetList.length) * 100)
       

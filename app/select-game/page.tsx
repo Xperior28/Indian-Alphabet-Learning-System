@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
 const games = [
   {
@@ -29,7 +30,7 @@ const games = [
   },
 ]
 
-export default function SelectGame() {
+function SelectGameContent() {
   const searchParams = useSearchParams()
   const language = searchParams.get("language")
 
@@ -75,5 +76,19 @@ export default function SelectGame() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SelectGame() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-yellow-100 to-orange-100">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-orange-600">Loading...</h1>
+        </div>
+      </div>
+    }>
+      <SelectGameContent />
+    </Suspense>
   )
 } 
