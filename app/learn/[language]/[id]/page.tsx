@@ -103,10 +103,7 @@ export default function LearnPage() {
           }
           
           (async () => {
-            const worker = await createWorker(lang, 1, {
-              langPath: '/tessdata',
-              logger: m => console.log(m),
-            });
+            const worker = await createWorker(lang);
             await worker.setParameters({
               tessedit_pageseg_mode: PSM.SINGLE_CHAR,
             });
